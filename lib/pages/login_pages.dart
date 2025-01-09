@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pl2_kasir/auth/auth_service.dart';
 
 
@@ -47,9 +48,10 @@ class _LoginPageState extends State<LoginPage> {
         //email
         TextField(
           controller: _emailController,
-          decoration: const InputDecoration(labelText: "Email",
-          prefixIcon: Icon(Icons.person),
-          iconColor: Colors.blue
+          decoration:  InputDecoration
+          (labelText: "Email", labelStyle: GoogleFonts.poppins(color: Colors.blue, fontWeight: FontWeight.w400 ) , 
+          prefixIcon: const Icon(Icons.person, color: Colors.blue,),
+  
           ),
         ),
         
@@ -58,24 +60,29 @@ class _LoginPageState extends State<LoginPage> {
 
         TextField(
           controller: _passwordController,
-          decoration: const InputDecoration(labelText: "Password", 
-          prefixIcon: Icon(Icons.lock),
-          iconColor: Colors.blue,
-          hintStyle: TextStyle(color: Colors.blue)
+          decoration:  InputDecoration
+          (labelText: "Password", labelStyle: GoogleFonts.poppins(color: Colors.blue, fontWeight: FontWeight.w400 ),
+          prefixIcon: const Icon(Icons.lock, color: Colors.blue),
+          // iconColor: Colors.blue,
           ),
         ),
 
         const SizedBox(height: 50,),
 
         //tombol login
-        ElevatedButton(onPressed: login, 
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          padding: const EdgeInsets.symmetric(horizontal: 160, vertical: 20),
-        ),
-        child: const Text("Login"),
+        
+        Container(
+          width: double.infinity,
+          child: ElevatedButton(onPressed: login, 
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            
+          ),
+          child: Text("Login", style: GoogleFonts.poppins(color: Colors.white, fontSize: 18),),
+          ),
         )
       ],
     ),

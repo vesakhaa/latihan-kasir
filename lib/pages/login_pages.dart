@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pl2_kasir/auth/auth_service.dart';
-
+import 'package:pl2_kasir/pages/dashboard.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,124 +14,187 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   //get authservice
 
-  final authService = AuthService();
+  // final authService = AuthService();
 
   //text controller
 
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   //tombol login
-  void login() async{
+  void login() async {
     final email = _emailController.text;
     final password = _passwordController.text;
 
     //percobaan login
-    try{
-      await authService.signInWithEmailAndPassword(email, password);
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+    try {
+      final response = await Supabase.instance.client.auth
+          .signInWithPassword(email: email, password: password);
+      if (response.session != null) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const Dashboard()));
+      } else {
+        _showError('Login Gagal, Periksa Email dan Password Anda');
       }
+    } catch (error) {
+      _showError(error.toString());
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
-    
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(title: const Text(""), centerTitle: true,),
-    body: Padding(padding: const EdgeInsets.symmetric(horizontal: 70),
-    child: Column(
-      children: [
-        const Image(image: AssetImage("rb_1592.png"), width: 320,),
+    bool _isPasswordVisible = false;
+    final screenWidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 70),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Image(
+              image: const AssetImage("rb_1592.png"),
+              width: screenWidth * 0.8,
+            ),
 
-        //email
-        TextField(
-          controller: _emailController,
-          decoration:  InputDecoration
-          (labelText: "Email", labelStyle: GoogleFonts.poppins(color: Colors.blue, fontWeight: FontWeight.w400 ) , 
-          prefixIcon: const Icon(Icons.person, color: Colors.blue,),
-  
-          ),
+            Text(
+              "Welcome",
+              style: GoogleFonts.poppins(
+                  fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "Please Login First",
+              style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey),
+            ),
+
+            //email
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                labelText: "Username",
+                labelStyle: GoogleFonts.poppins(
+                    color: const Color(0xFF2865CE),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14),
+                prefixIcon: const Icon(
+                  Icons.person,
+                  color: Color(0xFF2865CE),
+                ),
+              ),
+            ),
+
+            const SizedBox(
+              height: 10,
+            ),
+            //password
+
+            TextField(
+              controller: _passwordController,
+              obscureText: !_isPasswordVisible,
+              decoration: InputDecoration(
+                labelText: "Password",
+                labelStyle: GoogleFonts.poppins(
+                    color: Color(0xFF2865CE),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14),
+                prefixIcon: const Icon(Icons.lock, color: Color(0xFF2865CE)),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isPasswordVisible
+                        // ignore: dead_code
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                  // iconColor: Colors.blue,
+                ),
+              ),
+            ),
+
+            const SizedBox(
+              height: 40,
+            ),
+
+            //tombol login
+
+            ElevatedButton(
+              onPressed: login,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF2865CE),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                padding: const EdgeInsets.symmetric(vertical: 20),
+              ),
+              child: Text(
+                "Login",
+                style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
         ),
-        
-        const SizedBox(height: 15,),
-        //password
+      ),
 
-        TextField(
-          controller: _passwordController,
-          decoration:  InputDecoration
-          (labelText: "Password", labelStyle: GoogleFonts.poppins(color: Colors.blue, fontWeight: FontWeight.w400 ),
-          prefixIcon: const Icon(Icons.lock, color: Colors.blue),
-          // iconColor: Colors.blue,
-          ),
-        ),
+      // body: ListView(
+      //   children: [
+      //     Container(
+      //       padding: const EdgeInsets.all(16),
+      //       child:  const Image(image: AssetImage("rb_1592.png"), width: 300, height: 300,),
+      //     ),
 
-        const SizedBox(height: 50,),
+      //     // Email
+      //     Container(
+      //       padding: const EdgeInsets.all(16.0),
+      //       child: TextField(
+      //         controller: _emailController,
+      //         decoration: const InputDecoration(labelText: "Email"),
+      //       ),
+      //     ),
 
-        //tombol login
-        
-        Container(
-          width: double.infinity,
-          child: ElevatedButton(onPressed: login, 
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue,
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            
-          ),
-          child: Text("Login", style: GoogleFonts.poppins(color: Colors.white, fontSize: 18),),
-          ),
-        )
-      ],
-    ),
-    ),
+      //     // Password
+      //     Container(
+      //       padding: const EdgeInsets.all(16.0),
+      //       child: TextField(
+      //         controller: _passwordController,
+      //         decoration: const InputDecoration(labelText: "Password"),
+      //       ),
+      //     ),
 
+      //     const SizedBox(
+      //       height: 50.0,
+      //     ),
 
+      //     // Tombol Login
+      //     Container(
+      //       padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      //       child: ElevatedButton(
+      //         onPressed: login, /*() => Navigator.push(context, MaterialPageRoute(builder: (context) => const Dashboard())),*/
 
-
-    // body: ListView(
-    //   children: [
-    //     Container(
-    //       padding: const EdgeInsets.all(16),
-    //       child:  const Image(image: AssetImage("rb_1592.png"), width: 300, height: 300,),
-    //     ),
-        
-    //     // Email
-    //     Container(
-    //       padding: const EdgeInsets.all(16.0),
-    //       child: TextField(
-    //         controller: _emailController,
-    //         decoration: const InputDecoration(labelText: "Email"),
-    //       ),
-    //     ),
-
-    //     // Password
-    //     Container(
-    //       padding: const EdgeInsets.all(16.0),
-    //       child: TextField(
-    //         controller: _passwordController,
-    //         decoration: const InputDecoration(labelText: "Password"),
-    //       ),
-    //     ),
-
-    //     const SizedBox(
-    //       height: 50.0,
-    //     ),
-
-    //     // Tombol Login
-    //     Container(
-    //       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-    //       child: ElevatedButton(
-    //         onPressed: login, /*() => Navigator.push(context, MaterialPageRoute(builder: (context) => const Dashboard())),*/
-            
-    //         child: const Text("Login", style: TextStyle(color: Color.fromARGB(255, 21, 97, 184)),),
-    //       ),
-    //     ),
-    //   ],
-    // ),
-  );
-}
+      //         child: const Text("Login", style: TextStyle(color: Color.fromARGB(255, 21, 97, 184)),),
+      //       ),
+      //     ),
+      //   ],
+      // ),
+    );
+  }
 }

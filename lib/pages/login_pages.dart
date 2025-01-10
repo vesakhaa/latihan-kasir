@@ -21,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _isObsecure = true;
 
   //tombol login
   void login() async {
@@ -54,7 +55,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool _isPasswordVisible = false;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Padding(
@@ -84,14 +84,14 @@ class _LoginPageState extends State<LoginPage> {
             TextField(
               controller: _emailController,
               decoration: InputDecoration(
-                labelText: "Username",
+                labelText: "Email",
                 labelStyle: GoogleFonts.poppins(
-                    color: const Color(0xFF2865CE),
+                    color: const Color(0xFF00934E),
                     fontWeight: FontWeight.w400,
                     fontSize: 14),
                 prefixIcon: const Icon(
                   Icons.person,
-                  color: Color(0xFF2865CE),
+                  color: Color(0xFF00934E),
                 ),
               ),
             ),
@@ -103,27 +103,24 @@ class _LoginPageState extends State<LoginPage> {
 
             TextField(
               controller: _passwordController,
-              obscureText: !_isPasswordVisible,
+              obscureText: _isObsecure,
               decoration: InputDecoration(
                 labelText: "Password",
                 labelStyle: GoogleFonts.poppins(
-                    color: Color(0xFF2865CE),
+                    color: const Color(0xFF00934E),
                     fontWeight: FontWeight.w400,
                     fontSize: 14),
-                prefixIcon: const Icon(Icons.lock, color: Color(0xFF2865CE)),
+                prefixIcon: const Icon(Icons.lock,
+                    color:  Color(0xFF00934E)),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _isPasswordVisible
-                        // ignore: dead_code
-                        ? Icons.visibility
-                        : Icons.visibility_off,
+                    _isObsecure ? Icons.visibility_off : Icons.visibility,
                   ),
                   onPressed: () {
                     setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
+                      _isObsecure = !_isObsecure;
                     });
                   },
-                  // iconColor: Colors.blue,
                 ),
               ),
             ),
@@ -137,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
             ElevatedButton(
               onPressed: login,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF2865CE),
+                backgroundColor: const Color(0xFF00934E),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)),

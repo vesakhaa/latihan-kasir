@@ -63,14 +63,14 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Image(
-              image: const AssetImage("rb_1592.png"),
+              image: const AssetImage("rb_7893.png"),
               width: screenWidth * 0.8,
             ),
 
             Text(
               "Welcome",
               style: GoogleFonts.poppins(
-                  fontSize: 20, fontWeight: FontWeight.bold),
+                  fontSize: 20, fontWeight: FontWeight.bold, color: const Color(0xFF00934E)),
             ),
             Text(
               "Please Login First",

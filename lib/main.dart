@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pl2_kasir/auth/auth_gate.dart';
+import 'package:pl2_kasir/pages/dashboard.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -17,7 +18,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthGate(       
+      home: Dashboard(       
       ),
     );
   }

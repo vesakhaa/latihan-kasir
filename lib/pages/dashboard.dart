@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pl2_kasir/component/bottom_nar_bar.dart';
+import 'package:pl2_kasir/pages/cart_page.dart';
 import 'package:pl2_kasir/pages/login_pages.dart';
 
 class Dashboard extends StatefulWidget {
@@ -14,9 +16,25 @@ class _DashboardState extends State<Dashboard> {
     Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const LoginPage()));
   }
+  int _selectedIndex = 0;
+  void navigateBottomBar(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  final List <Widget> _pages = [
+    const Dashboard(),
+
+    const CartPage(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: MyBottomNavBar(
+        onTabChange: (index) => navigateBottomBar(index),
+      ),
       appBar: AppBar(           
             title: Text('Menu', style: GoogleFonts.poppins(color: Colors.black, fontWeight: FontWeight.bold),),
             centerTitle: true,
@@ -28,7 +46,9 @@ class _DashboardState extends State<Dashboard> {
             ],
           ),
 
-      body: Padding(padding: const EdgeInsets.all(20),
+      body: 
+      Padding(padding: const EdgeInsets.all(20),
+      
 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -53,8 +73,11 @@ class _DashboardState extends State<Dashboard> {
               ),
             )
           ],
+
+    
           
         ),
+        
         
 
         

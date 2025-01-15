@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pl2_kasir/auth/auth_service.dart';
-import 'package:pl2_kasir/pages/dashboard.dart';
+// import 'package:pl2_kasir/pages/dashboard.dart';
+import 'package:pl2_kasir/pages/homepage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginPage extends StatefulWidget {
@@ -34,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
           .signInWithPassword(email: email, password: password);
       if (response.session != null) {
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const Dashboard()));
+            MaterialPageRoute(builder: (context) => const Homepage()));
       } else {
         _showError('Login Gagal, Periksa Email dan Password Anda');
       }

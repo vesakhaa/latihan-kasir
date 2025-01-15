@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pl2_kasir/pages/dashboard.dart';
 import 'package:pl2_kasir/pages/login_pages.dart';
 import 'package:pl2_kasir/pages/profile_pages.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -24,7 +25,7 @@ class AuthGate extends StatelessWidget {
       final session = snapshot.hasData ? snapshot.data!.session : null;
 
       if (session != null) {
-        return const ProfilePage();
+        return const Dashboard();
       } else {
         return const LoginPage();
       }

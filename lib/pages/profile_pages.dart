@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class ProfilePages extends StatefulWidget {
+  const ProfilePages({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<ProfilePages> createState() => _ProfilePagesState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePagesState extends State<ProfilePages> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      
+      body: Text("Kontol"),
     );
   }
 }

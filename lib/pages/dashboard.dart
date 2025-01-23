@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pl2_kasir/pages/edit_product_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Dashboard extends StatefulWidget {
@@ -56,7 +57,10 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> deleteProduct(int productId) async {
     try {
-      await Supabase.instance.client.from('produk').delete().eq('produk_id', productId);
+      await Supabase.instance.client
+          .from('produk')
+          .delete()
+          .eq('produk_id', productId);
       fetchProducts(); // Refresh data setelah penghapusan
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Product deleted successfully')),
@@ -73,7 +77,7 @@ class _DashboardState extends State<Dashboard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Add Product'),
+          title:  Text('Add Product', style: GoogleFonts.poppins(),),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -104,7 +108,8 @@ class _DashboardState extends State<Dashboard> {
               child: const Text('Add'),
               onPressed: () {
                 final String name = _productNameController.text;
-                final double price = double.tryParse(_priceController.text) ?? 0;
+                final double price =
+                    double.tryParse(_priceController.text) ?? 0;
                 final int stock = int.tryParse(_stockController.text) ?? 0;
                 if (name.isNotEmpty && price > 0 && stock >= 0) {
                   createProduct(name, price, stock);
@@ -114,7 +119,7 @@ class _DashboardState extends State<Dashboard> {
                   _stockController.clear();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Invalid input')), 
+                    const SnackBar(content: Text('Invalid input')),
                   );
                 }
               },
@@ -144,10 +149,7 @@ class _DashboardState extends State<Dashboard> {
           )
         ],
       ),
-      body: 
-      
-      
-      products.isEmpty
+      body: products.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               padding: const EdgeInsets.all(16.0),
@@ -172,7 +174,9 @@ class _DashboardState extends State<Dashboard> {
                     title: Text(
                       product['nama_produk'] ?? 'No Name',
                       style: GoogleFonts.poppins(
-                          fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xFF00934E)),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF00934E)),
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,8 +199,22 @@ class _DashboardState extends State<Dashboard> {
                       children: [
                         IconButton(
                           icon: Icon(Icons.edit, color: Colors.blue[400]),
-                          onPressed: () {
-                            // Tambahkan logika edit produk di sini
+                          onPressed: () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditProductPage(
+                                  productId: product['produk_id'],
+                                  initialName: product['nama_produk'],
+                                  initialPrice: product['harga'].toDouble(),
+                                  initialStock: product['stok'],
+                                ),
+                              ),
+                            );
+
+                            if (result == true) {
+                              fetchProducts(); // Refresh data jika berhasil mengedit produk
+                            }
                           },
                         ),
                         IconButton(
@@ -237,8 +255,11 @@ class _DashboardState extends State<Dashboard> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showCreateProductDialog,
-        backgroundColor:const Color(0xFF00934E),
-        child: const Icon(Icons.add, color: Colors.white,),
+        backgroundColor: const Color(0xFF00934E),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }
